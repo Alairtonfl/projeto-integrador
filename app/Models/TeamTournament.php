@@ -14,6 +14,7 @@ class TeamTournament extends Model
     protected $fillable = [
       'team_id',
       'tournament_id',
-      'active'
+      'active',
+      'phase'
   ];
 }

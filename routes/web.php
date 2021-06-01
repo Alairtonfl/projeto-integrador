@@ -17,10 +17,9 @@ use App\Http\Controllers\TeamController;
 |
 */
 
-Auth::routes(['register'=> false]);
+Auth::routes(['register' => false]);
 
-Route::middleware('auth')->group(function(){
-    
+Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
@@ -30,10 +29,10 @@ Route::post('/tournament/create', [App\Http\Controllers\TournamentController::cl
 
 Route::get('/team/{id}', [App\Http\Controllers\TeamController::class, 'index'])->name('indexTeam');
 Route::post('/team/create/{tournament_id}', [App\Http\Controllers\TeamController::class, 'create'])->name('createTeam');
+Route::post('/includeteam/{tournament_id}', [App\Http\Controllers\TournamentController::class, 'includeTeam'])->name('includeTeam');
 
-Route::get('/auth/redirect', [App\Http\Controllers\Auth\LoginController::class , 'loginGoogle'])->name('loginGoogle');
-Route::get('/auth/callback', [App\Http\Controllers\Auth\LoginController::class , 'loginCallback'])->name('loginCallback');
+Route::get('/matchs', [App\Http\Controllers\MatchsController::class, 'index']);
+Route::post('/stats/create/{tournament_id}', [App\Http\Controllers\StatsController::class, 'create'])->name('createStats');
 
-Route::post('/includeteam/{tournament_id}', [App\Http\Controllers\TeamTournamentController::class, 'includeTeam'])->name('includeTeam');
-
-
+Route::get('/auth/redirect', [App\Http\Controllers\Auth\LoginController::class, 'loginGoogle'])->name('loginGoogle');
+Route::get('/auth/callback', [App\Http\Controllers\Auth\LoginController::class, 'loginCallback'])->name('loginCallback');

@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\EventCreateStats;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Events\EventCreateTeam;
 use App\Listeners\CreatePlayerListener;
+use App\Listeners\CreateMatchListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         EventCreateTeam::class => [
           CreatePlayerListener::class,
+        ],
+        EventCreateStats::class =>[
+          CreateMatchListener::class,
         ],
     ];
 

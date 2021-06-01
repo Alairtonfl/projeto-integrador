@@ -22,7 +22,6 @@ class TeamTournamentFactory extends Factory
     public function definition()
     {
       $team = \App\Models\Team::count();
-      //$tournament = \App\Models\Tournament::count();
         return [
             'active' => true,
             'team_id' => rand(1,$team),

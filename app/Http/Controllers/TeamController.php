@@ -21,7 +21,6 @@ class TeamController extends Controller
     //
     $teams = Team::where('id', $request->id)->get();
     $players = Player::where('team_id', $request->id)->get();
-    //dd($teams);
     return view('home.team', [
       'teams' => $teams,
       'players' => $players

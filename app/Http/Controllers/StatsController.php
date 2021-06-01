@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventCreateStats;
 use App\Models\Stats;
 use Illuminate\Http\Request;
 
@@ -22,9 +23,22 @@ class StatsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request, $tournament_id)
     {
         //
+        $this->validate($request,[
+          'team1' => 'required',
+          'team2' => 'required'
+        ]);
+        if($request->team1 != $request->team2){
+          $stats = \App\Models\Stats::factory(1)->create([
+          'team_tournament_id1' => $request->team1,
+          'team_tournament_id2' => $request->team2
+        ]);
+        EventCreateStats::dispatch($stats->first(), $tournament_id);
+        return redirect()->back();
+        } 
+        return redirect()->back();
     }
 
     /**

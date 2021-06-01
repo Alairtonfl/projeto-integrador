@@ -14,12 +14,15 @@ class Stats extends Model
     protected $fillable = [
       'shots1',
       'shots2',
-      'team1_id',
-      'team2_id',
+      'team_tournament_id1',
+      'team_tournament_id2',
       'possesion1',
       'possesion2',
       'goals1',
       'goals2'
-
   ];
+
+  public function match(){
+    return $this->hasOne(Matchs::class,'id', 'stats_id');
+  }
 }

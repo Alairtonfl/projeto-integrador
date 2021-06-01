@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Matchs;
 use Illuminate\Http\Request;
 use App\Models\Tournament;
-use App\Models\TeamTournament;
 use App\Models\Team;
 
 class TournamentController extends Controller
@@ -13,13 +13,11 @@ class TournamentController extends Controller
     public function index(Request $request)
     {
         //
-        $tournaments = Tournament::where('id', $request->id)->get();
+        $tournaments = Tournament::find($request->id);
         $teams = Team::all();
-        $teams_tournament = TeamTournament::where('tournament_id', $request->id)->get();
-        //dd($teams);
+        $matchs = Matchs::where('tournament_id', $request->id)->get();
         return view('home.tournament', [
           'tournaments' => $tournaments,
-          'teams_tournament' => $teams_tournament,
           'teams' => $teams
         ]);
     }
@@ -103,5 +101,17 @@ class TournamentController extends Controller
     public function destroy(Team $team)
     {
         //
+    }
+
+    public function includeTeam(Request $request, $tournament_id){
+      $this->validate($request, [
+        'teamSelect' => 'required'
+      ]);
+      $tournament = Tournament::find($tournament_id);
+      $tournament->teams()->attach($request->teamSelect, [
+        'active' => true,
+        'phase' => 8
+      ]);
+      return redirect()->back();
     }
 }

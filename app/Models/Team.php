@@ -19,6 +19,6 @@ class Team extends Model
   ];
 
     public function tournaments(){
-      return $this->belongsToMany(\App\Models\Tournament::class, 'team_tournament', 'team_id', 'tournament_id');
+      return $this->belongsToMany(\App\Models\Tournament::class, 'team_tournament', 'team_id', 'tournament_id')->withPivot('id', 'active', 'phase');
     }
 }

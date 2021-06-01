@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Matchs;
+use App\Models\Stats;
 use Illuminate\Http\Request;
 
 class MatchsController extends Controller
@@ -15,6 +16,8 @@ class MatchsController extends Controller
     public function index()
     {
         //
+        $matchs = Matchs::find(1);
+        dd($matchs->stats());
     }
 
     /**
@@ -22,9 +25,14 @@ class MatchsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Stats $stats, $tournament_id)
     {
         //
+        \App\Models\Matchs::factory(1)->create([
+          'stats_id' => $stats->id,
+          'tournament_id' => $tournament_id
+        ]);
+        return redirect()->back();
     }
 
     /**

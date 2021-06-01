@@ -7,14 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Matchs extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $table = 'matchs';
+  protected $table = 'matchs';
 
-    protected $fillable = [
-      'date',
-      'location',
-      'stats_id',
-      'tournament_id',
+  protected $fillable = [
+    'date',
+    'location',
+    'stats_id',
+    'tournament_id',
   ];
+
+  public function stats()
+  {
+    return $this->hasOne(Stats::class,'id','stats_id');
+  }
 }
