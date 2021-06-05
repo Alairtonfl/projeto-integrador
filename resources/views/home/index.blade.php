@@ -61,7 +61,6 @@
               <select class="form-control" name="teamsTournament">
                 <option>16</option>
                 <option>32</option>
-                <option>64</option>
               </select>
             </div>
             <input type="number" class="form-control" name="prizeTournament" placeholder="Premiação" step=".01">

@@ -15,11 +15,20 @@ class Matchs extends Model
     'date',
     'location',
     'stats_id',
-    'tournament_id',
+    'team_tournament_id1',
+    'team_tournament_id2',
   ];
 
   public function stats()
   {
     return $this->hasOne(Stats::class,'id','stats_id');
+  }
+
+  public function team_tournament1(){
+    return $this->hasOne(TeamTournament::class, 'id', 'team_tournament_id1');
+  }
+
+  public function team_tournament2(){
+    return $this->hasOne(TeamTournament::class, 'id', 'team_tournament_id2');
   }
 }

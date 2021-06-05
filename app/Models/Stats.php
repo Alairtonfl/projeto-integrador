@@ -14,8 +14,6 @@ class Stats extends Model
     protected $fillable = [
       'shots1',
       'shots2',
-      'team_tournament_id1',
-      'team_tournament_id2',
       'possesion1',
       'possesion2',
       'goals1',

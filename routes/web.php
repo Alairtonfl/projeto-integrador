@@ -32,7 +32,7 @@ Route::post('/team/create/{tournament_id}', [App\Http\Controllers\TeamController
 Route::post('/includeteam/{tournament_id}', [App\Http\Controllers\TournamentController::class, 'includeTeam'])->name('includeTeam');
 
 Route::get('/matchs', [App\Http\Controllers\MatchsController::class, 'index']);
-Route::post('/stats/create/{tournament_id}', [App\Http\Controllers\StatsController::class, 'create'])->name('createStats');
+Route::post('/stats/create', [App\Http\Controllers\StatsController::class, 'create'])->name('createStats');
 
 Route::get('/auth/redirect', [App\Http\Controllers\Auth\LoginController::class, 'loginGoogle'])->name('loginGoogle');
 Route::get('/auth/callback', [App\Http\Controllers\Auth\LoginController::class, 'loginCallback'])->name('loginCallback');

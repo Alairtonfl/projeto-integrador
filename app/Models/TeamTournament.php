@@ -17,4 +17,8 @@ class TeamTournament extends Model
       'active',
       'phase'
   ];
+
+  public function team(){
+    return $this->hasOne(Team::class, 'id', 'team_id');
+  }
 }

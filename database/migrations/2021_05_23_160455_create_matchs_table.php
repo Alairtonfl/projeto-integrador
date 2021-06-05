@@ -16,8 +16,10 @@ class CreateMatchsTable extends Migration
         Schema::create('matchs', function (Blueprint $table) {
           $table->increments('id');
           $table->date('date');
-          $table->integer('tournament_id')->unsigned();
-          $table->foreign('tournament_id')->references('id')->on('tournament');
+          $table->integer('team_tournament_id1')->unsigned();
+          $table->foreign('team_tournament_id1')->references('id')->on('team_tournament');
+          $table->integer('team_tournament_id2')->unsigned();
+          $table->foreign('team_tournament_id2')->references('id')->on('team_tournament');
           $table->string('location');
           $table->integer('stats_id')->unsigned();
           $table->foreign('stats_id')->references('id')->on('stats');

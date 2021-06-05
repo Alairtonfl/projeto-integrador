@@ -15,16 +15,18 @@ class EventCreateStats
 {
   use Dispatchable, InteractsWithSockets, SerializesModels;
   public $stats;
-  public $tournament_id;
+  public $team_tournament_id1;
+  public $team_tournament_id2;
   /**
    * Create a new event instance.
    *
    * @return void
    */
-  public function __construct(Stats $stats, $tournament_id)
+  public function __construct(Stats $stats, $team_tournament_id1, $team_tournament_id2)
   {
     //
     $this->stats = $stats;
-    $this->tournament_id = $tournament_id;
+    $this->team_tournament_id1 = $team_tournament_id1;
+    $this->team_tournament_id2 = $team_tournament_id2;
   }
 }

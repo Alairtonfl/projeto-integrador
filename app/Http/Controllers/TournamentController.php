@@ -15,10 +15,12 @@ class TournamentController extends Controller
         //
         $tournaments = Tournament::find($request->id);
         $teams = Team::all();
-        $matchs = Matchs::where('tournament_id', $request->id)->get();
+        $matchs = Matchs::with('team_tournament1')->with('team_tournament2')->with('stats')->get();
+        //dd($matchs);
         return view('home.tournament', [
           'tournaments' => $tournaments,
-          'teams' => $teams
+          'teams' => $teams,
+          'matchs' => $matchs
         ]);
     }
 
@@ -110,7 +112,8 @@ class TournamentController extends Controller
       $tournament = Tournament::find($tournament_id);
       $tournament->teams()->attach($request->teamSelect, [
         'active' => true,
-        'phase' => 8
+        'phase' => $tournament->number_teams/2,
+        'created_at' => now(),
       ]);
       return redirect()->back();
     }

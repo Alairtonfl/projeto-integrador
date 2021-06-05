@@ -62,8 +62,6 @@
     </div>
   </div>
   @else
-
-
   <div class="container fluid d-flex align-items-center border mb-2 bg-light">
     <div class="container">
       <div class="row mt-2 mb-2">
@@ -85,18 +83,22 @@
         <div class="modal-body">
           <h5>Escolher dois times</h5>
           <div class="form-group">
-            <form action="{{Route('createStats', $tournaments->id)}}" method="POST" id="teamForm">
+            <form action="{{Route('createStats')}}" method="POST" id="teamForm">
               @csrf
               <span>Time 1</span>
               <select class="form-select" name="team1">
                 @foreach ($tournaments->teams as $team)
+                @if ($team->pivot->active and $team->pivot->phase == $tournaments->number_teams/2)
                 <option value="{{$team->pivot->id}}">{{$team->name}}</option>
+                @endif
                 @endforeach
               </select>
               <span>Time 2</span>
               <select class="form-select" name="team2">
                 @foreach ($tournaments->teams as $team)
+                @if ($team->pivot->active and $team->pivot->phase == $tournaments->number_teams/2)
                 <option value="{{$team->pivot->id}}">{{$team->name}}</option>
+                @endif
                 @endforeach
               </select>
               <div class="modal-footer">
@@ -139,4 +141,34 @@
       </table>
     </div>
   </div>
+
+  @if ($matchs->count() > 0)
+  <div class="container fluid d-flex align-items-center border bg-light">
+    <div class="card-body table-responsive p-0 mt-3">
+      <h3>Partidas</h3>
+      <table class="table table-hover table-ligth">
+        <thead>
+          <th></th>
+          <th>Time</th>
+          <th>Placar</th>
+          <th>Time</th>
+          <th></th>
+        </thead>
+        <tbody>
+          @foreach ($matchs as $match)
+          @if ($match->team_tournament1->tournament_id == $tournaments->id)
+          <tr>
+            <td><img src="{{$match->team_tournament1->team()->first()->emblem}}" width="24" height="30"></td>
+            <td>{{$match->team_tournament1->team()->first()->name}}</td>
+            <td>{{$match->stats->goals1}} X {{$match->stats->goals2}}</td>
+            <td>{{$match->team_tournament2->team()->first()->name}}</td>
+            <td><img src="{{$match->team_tournament2->team()->first()->emblem}}" width="24" height="30"></td>
+          </tr>
+          @endif
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  </div>
+  @endif
   @endsection

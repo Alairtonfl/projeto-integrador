@@ -23,7 +23,7 @@ class StatsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $tournament_id)
+    public function create(Request $request)
     {
         //
         $this->validate($request,[
@@ -32,10 +32,8 @@ class StatsController extends Controller
         ]);
         if($request->team1 != $request->team2){
           $stats = \App\Models\Stats::factory(1)->create([
-          'team_tournament_id1' => $request->team1,
-          'team_tournament_id2' => $request->team2
         ]);
-        EventCreateStats::dispatch($stats->first(), $tournament_id);
+        EventCreateStats::dispatch($stats->first(), $request->team1, $request->team2);
         return redirect()->back();
         } 
         return redirect()->back();

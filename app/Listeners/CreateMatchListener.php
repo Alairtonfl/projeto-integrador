@@ -29,6 +29,6 @@ class CreateMatchListener
     {
         //
         $match = New MatchsController;
-        $match->create($event->stats, $event->tournament_id);
+        $match->create($event->stats, $event->team_tournament_id1, $event->team_tournament_id2);
     }
 }

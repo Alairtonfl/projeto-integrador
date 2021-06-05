@@ -25,7 +25,8 @@ class TeamTournamentFactory extends Factory
         return [
             'active' => true,
             'team_id' => rand(1,$team),
-            'tournament_id' => 1
+            'tournament_id' => 1,
+            'created_at' => now(),
         ];
     }
 }
