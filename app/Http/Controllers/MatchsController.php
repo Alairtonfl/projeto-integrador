@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventCreateStats;
 use App\Models\Matchs;
 use App\Models\Stats;
 use Illuminate\Http\Request;
@@ -102,6 +103,35 @@ class MatchsController extends Controller
     } else {
       $match->team_tournament2()->first()->update(['active' => 0]);
       $match->team_tournament1()->first()->update(['phase' => $match->team_tournament2()->first()->phase/2 ]);
+    }
+  }
+
+  public function playoffs($teams){
+    $flag = count($teams);
+    $active = $teams;
+    for($i = 0; $i < $flag/2; $i++){
+      $stats = \App\Models\Stats::factory(1)->create([
+      ]);
+      shuffle($teams);
+      $first = reset($teams);
+      $end = end($teams);
+      $key1 = array_search($first, $teams);
+      $key2 = array_search($end, $teams);
+      EventCreateStats::dispatch($stats->first(), $first, $end);
+      unset($teams[$key1]);
+      unset($teams[$key2]); 
+    }
+    $this->activeVerificition($active);
+  }
+
+  public function activeVerificition($teams){
+    $matchs = Matchs::with('team_tournament1')->with('team_tournament2')->with('stats')->get();
+    foreach($matchs as $match ){
+      for($i = 0; $i < count($teams); $i++){
+        if($match->team_tournament1->tournament_id == $teams[$i] && $match->team_tournament1->active == 0){
+          
+        }
+      }
     }
   }
 }

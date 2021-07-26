@@ -94,4 +94,13 @@ class StatsController extends Controller
     {
         //
     }
+
+    public function sortPlayoff(Request $request){
+      for($i = 1; $i < $request->request->count(); $i++){
+        $teams[] = $request->team . $i;
+      }
+      $matchs = new MatchsController();
+      $matchs->playoffs($teams);
+      redirect()->back();
+    }
 }

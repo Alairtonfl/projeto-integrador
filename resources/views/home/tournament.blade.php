@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+<link rel="stylesheet" href="{{asset('css/tournament.css')}}">
 <div class="container fluid d-flex align-items-center border mb-2 bg-light">
   <h1>{{$tournaments->name}}</h1>
 </div>
@@ -62,57 +62,26 @@
     </div>
   </div>
   @else
+
   <div class="container fluid d-flex align-items-center border mb-2 bg-light">
     <div class="container">
       <div class="row mt-2 mb-2">
         <div class="col  p-1">
-          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#createMatchs">Sortear
-            playoffs</button>
+          <form action="{{Route('sortPlayoff')}}" method="POST">
+            @csrf
+            @php $flag = 1;@endphp
+            @foreach ($tournaments->teams as $team)
+            <input type="hidden" name="team{{$flag++}}" value="{{$team->pivot->id}}">
+            @endforeach
+            <button type="submit" class="btn btn-outline-primary">Sortear
+              playoffs</button>
+          </form>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Modal Create Matchs-->
-  <div class="modal fade" id="createMatchs" tabindex="-1" role="dialog" aria-labelledby="createMatchsLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Sortear partidas</h5>
-        </div>
-        <div class="modal-body">
-          <h5>Escolher dois times</h5>
-          <div class="form-group">
-            <form action="{{Route('createStats')}}" method="POST" id="teamForm">
-              @csrf
-              <span>Time 1</span>
-              <select class="form-select" name="team1">
-                @foreach ($tournaments->teams as $team)
-                @if ($team->pivot->active and $team->pivot->phase == $tournaments->number_teams/2)
-                <option value="{{$team->pivot->id}}">{{$team->name}}</option>
-                @endif
-                @endforeach
-              </select>
-              <span>Time 2</span>
-              <select class="form-select" name="team2">
-                @foreach ($tournaments->teams as $team)
-                @if ($team->pivot->active and $team->pivot->phase == $tournaments->number_teams/2)
-                <option value="{{$team->pivot->id}}">{{$team->name}}</option>
-                @endif
-                @endforeach
-              </select>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-primary">Add</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   </div>
 
+  </div>
   @endif
 
   <div class="container fluid d-flex align-items-center border bg-light">
@@ -141,6 +110,29 @@
       </table>
     </div>
   </div>
+
+  @if ($matchs->count() > 0)
+  <div>
+    <img src="{{asset('img/playoffs.jpg')}}" class="img-fluid" alt="...">
+    @php $phase = 1 @endphp
+    @foreach ($matchs as $match)
+    @if ($match->team_tournament1->tournament_id == $tournaments->id)
+    <div id="game{{$phase++}}">
+      <div id="team">
+        <img id="game" src="{{$match->team_tournament1->team()->first()->emblem}}">
+        <h6>{{$match->team_tournament1->team()->first()->name }}</h6>
+        <h5>{{$match->stats->goals1}}</h5>
+      </div>
+      <div id="team">
+        <img id="game" src="{{$match->team_tournament2->team()->first()->emblem}}">
+        <h6>{{$match->team_tournament2->team()->first()->name }}</h6>
+        <h5>{{$match->stats->goals2}}</h5>
+      </div>
+    </div>
+    @endif
+    @endforeach
+  </div>
+  @endif
 
   @if ($matchs->count() > 0)
   <div class="container fluid d-flex align-items-center border bg-light">
