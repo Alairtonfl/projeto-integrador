@@ -93,7 +93,7 @@
             <th scope="col">Emblema</th>
             <th scope="col">Time</th>
             <th scope="col">Abreviação</th>
-            <th scope="col">Ver</th>
+            <th scope="col">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -102,37 +102,27 @@
             <th scope="row"><img src="{{$team->emblem}}" width="24" height="30"></th>
             <td>{{$team->name}}</td>
             <td>{{$team->abreviation}}</td>
-            <td><a href="{{Route('indexTeam', $team->id)}}"><button type="button" class="btn btn-dark">Ver</button></a>
+            @if ( $tournaments->teams->count() < $tournaments->number_teams)
+            <td>
+              <a href="{{Route('indexTeam', $team->id)}}"><button type="button" class="btn btn-dark">Ver</button></a>
+              <form action="{{Route('deleteTeam', $tournaments->id)}}" method="POST">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="teamId" value="{{$team->id}}">
+              <button type="submit" class="btn btn-danger">Del</button>
+              </form>
             </td>
+            @else
+            <td>
+              <a href="{{Route('indexTeam', $team->id)}}"><button type="button" class="btn btn-dark">Ver</button></a>
+            </td>
+            @endif
           </tr>
           @endforeach
         </tbody>
       </table>
     </div>
   </div>
-
-  @if ($matchs->count() > 0)
-  <div>
-    <img src="{{asset('img/playoffs.jpg')}}" class="img-fluid" alt="...">
-    @php $phase = 1 @endphp
-    @foreach ($matchs as $match)
-    @if ($match->team_tournament1->tournament_id == $tournaments->id)
-    <div id="game{{$phase++}}">
-      <div id="team">
-        <img id="game" src="{{$match->team_tournament1->team()->first()->emblem}}">
-        <h6>{{$match->team_tournament1->team()->first()->name }}</h6>
-        <h5>{{$match->stats->goals1}}</h5>
-      </div>
-      <div id="team">
-        <img id="game" src="{{$match->team_tournament2->team()->first()->emblem}}">
-        <h6>{{$match->team_tournament2->team()->first()->name }}</h6>
-        <h5>{{$match->stats->goals2}}</h5>
-      </div>
-    </div>
-    @endif
-    @endforeach
-  </div>
-  @endif
 
   @if ($matchs->count() > 0)
   <div class="container fluid d-flex align-items-center border bg-light">
@@ -145,6 +135,7 @@
           <th>Placar</th>
           <th>Time</th>
           <th></th>
+          <th>Ver</th>
         </thead>
         <tbody>
           @foreach ($matchs as $match)
@@ -155,6 +146,9 @@
             <td>{{$match->stats->goals1}} X {{$match->stats->goals2}}</td>
             <td>{{$match->team_tournament2->team()->first()->name}}</td>
             <td><img src="{{$match->team_tournament2->team()->first()->emblem}}" width="24" height="30"></td>
+            <td>
+              <a href="{{Route('indexMatch', $match->id)}}"><button type="button" class="btn btn-dark">Ver</button></a>
+            </td>
           </tr>
           @endif
           @endforeach

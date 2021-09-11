@@ -29,8 +29,10 @@ Route::middleware('auth')->group(function () {
   Route::get('/team/{id}', [App\Http\Controllers\TeamController::class, 'index'])->name('indexTeam');
   Route::post('/team/create/{tournament_id}', [App\Http\Controllers\TeamController::class, 'create'])->name('createTeam');
   Route::post('/includeteam/{tournament_id}', [App\Http\Controllers\TournamentController::class, 'includeTeam'])->name('includeTeam');
+  Route::delete('/deleteteam/{tournament_id}', [App\Http\Controllers\TournamentController::class, 'destroy'])->name('deleteTeam');
   
-  Route::get('/matchs', [App\Http\Controllers\MatchsController::class, 'index']);
+  Route::get('/matchs/{id}', [App\Http\Controllers\MatchsController::class, 'index'])->name('indexMatch');
+  Route::post('/matchs/stats/{match_id}', [App\Http\Controllers\StatsController::class, 'edit'])->name('editStats');
   Route::post('/stats/create', [App\Http\Controllers\StatsController::class, 'create'])->name('createStats');
   Route::post('/stats/playoff', [App\Http\Controllers\StatsController::class, 'sortPlayoff'])->name('sortPlayoff');
 });

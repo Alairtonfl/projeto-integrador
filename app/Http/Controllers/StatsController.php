@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Events\EventCreateStats;
+use App\Http\Controllers\MatchsController;
 use App\Models\Stats;
+use App\Models\Matchs;
 use Illuminate\Http\Request;
 
 class StatsController extends Controller
@@ -67,9 +69,20 @@ class StatsController extends Controller
      * @param  \App\Models\Stats  $stats
      * @return \Illuminate\Http\Response
      */
-    public function edit(Stats $stats)
-    {
-        //
+    public function edit(Request $request, $match_id)
+    { 
+      $match = Matchs::with('team_tournament1')->with('team_tournament2')->with('stats')->find($match_id);
+      $match->stats->goals1 = $request->goals1;
+      $match->stats->goals2 = $request->goals2;
+      $match->stats->shots1 = $request->shots1;
+      $match->stats->shots2 = $request->shots2;
+      $match->stats->possesion1 = $request->possesion1;
+      $match->stats->possesion2 = $request->possesion2;
+      $match->stats->save();
+      
+      $m = new MatchsController();
+      $m->winnerVerification($match);
+      return redirect()->back();
     }
 
     /**
@@ -101,6 +114,6 @@ class StatsController extends Controller
       }
       $matchs = new MatchsController();
       $matchs->playoffs($teams);
-      redirect()->back();
+      return redirect()->back();
     }
 }

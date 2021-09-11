@@ -6,6 +6,7 @@ use App\Models\Matchs;
 use Illuminate\Http\Request;
 use App\Models\Tournament;
 use App\Models\Team;
+use PhpParser\Node\Stmt\Return_;
 
 class TournamentController extends Controller
 {
@@ -100,9 +101,12 @@ class TournamentController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Team $team)
+    public function destroy(Request $request, $tournament_id)
     {
-        //
+      $team = Team::find($request->teamId);
+      $tournament = Tournament::find($tournament_id);
+      $tournament->teams()->detach($team);
+      Return redirect()->back();
     }
 
     public function includeTeam(Request $request, $tournament_id){

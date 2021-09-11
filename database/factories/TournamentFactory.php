@@ -24,7 +24,7 @@ class TournamentFactory extends Factory
         $user = \App\Models\User::count();
         return [
             'name' => $this->faker->name(),
-            'number_teams' => 32,
+            'number_teams' => 16,
             'description' => $this->faker->text(),
             'prize' => $this->faker->randomNumber(5),
             'sport' => $this->faker->name(),

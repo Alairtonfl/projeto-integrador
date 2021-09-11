@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\EventCreateStats;
 use App\Models\Matchs;
 use App\Models\Stats;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
 class MatchsController extends Controller
@@ -14,11 +15,16 @@ class MatchsController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index($match_id)
   {
-    //
-    $matchs = Matchs::find(1);
-    //dd($matchs->stats());
+    $match = Matchs::with('team_tournament1')->with('team_tournament2')->with('stats')->find($match_id);
+    $team1 = Team::find($match->team_tournament1->team_id);
+    $team2 = Team::find($match->team_tournament2->team_id);
+    return view('home.match', [
+      'match' => $match,
+      'team1' => $team1,
+      'team2' => $team2
+    ]);
   }
 
   /**
@@ -98,38 +104,39 @@ class MatchsController extends Controller
   {
     $match = Matchs::where('id', $match->id)->with('team_tournament1')->with('team_tournament2')->with('stats')->first();
     if ($match->stats()->first()->goals1 < $match->stats()->first()->goals2) {
-      $match->team_tournament1()->first()->update(['active' => 0]);
-      $match->team_tournament2()->first()->update(['phase' => $match->team_tournament1()->first()->phase/2 ]);
+      $match->team_tournament2()->first()->update(['active' => 1]);
+      $match->team_tournament1()->first()->update(['phase' => $match->team_tournament1()->first()->phase/2 ]);
     } else {
-      $match->team_tournament2()->first()->update(['active' => 0]);
-      $match->team_tournament1()->first()->update(['phase' => $match->team_tournament2()->first()->phase/2 ]);
+      $match->team_tournament1()->first()->update(['active' => 1]);
+      $match->team_tournament2()->first()->update(['phase' => $match->team_tournament2()->first()->phase/2 ]);
     }
   }
 
-  public function playoffs($teams){
+  public function playoffs($teams)
+  {
     $flag = count($teams);
-    $active = $teams;
-    for($i = 0; $i < $flag/2; $i++){
-      $stats = \App\Models\Stats::factory(1)->create([
-      ]);
-      shuffle($teams);
-      $first = reset($teams);
-      $end = end($teams);
-      $key1 = array_search($first, $teams);
-      $key2 = array_search($end, $teams);
-      EventCreateStats::dispatch($stats->first(), $first, $end);
-      unset($teams[$key1]);
-      unset($teams[$key2]); 
-    }
-    $this->activeVerificition($active);
+      $first = 0;
+      $end = 0;
+      for ($i = 0; $i < $flag / 2; $i++) {
+        $stats = \App\Models\Stats::factory(1)->create([]);
+
+        $first = $end+1;
+        $end = $first+1;
+
+        EventCreateStats::dispatch($stats->first(), $first, $end);
+      }
+    redirect()->back();
   }
 
-  public function activeVerificition($teams){
+  public function activeVerificition($team_tournament_id1, $team_tournament_id2)
+  {
     $matchs = Matchs::with('team_tournament1')->with('team_tournament2')->with('stats')->get();
-    foreach($matchs as $match ){
-      for($i = 0; $i < count($teams); $i++){
-        if($match->team_tournament1->tournament_id == $teams[$i] && $match->team_tournament1->active == 0){
-          
+    foreach ($matchs as $match) {
+      foreach($matchs as $match) {
+        if ($match->team_tournament_id1 == $team_tournament_id1 && $match->team_tournament_id2 == $team_tournament_id2 && $match->team_tournament1->active == 0) {
+          return $match->team_tournament1->id;
+        } else{
+          return $match->team_tournament2->id;
         }
       }
     }

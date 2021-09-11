@@ -106,6 +106,5 @@ class TeamController extends Controller
    */
   public function destroy(Team $team)
   {
-    //
   }
 }
